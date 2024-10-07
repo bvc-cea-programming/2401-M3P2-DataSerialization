@@ -13,6 +13,8 @@ public class PlaceableGenerator : MonoBehaviour
     private Dictionary<string, PlaceableObject> _placeableDictionary = new Dictionary<string, PlaceableObject>();
 
     public Transform PlaceableContainer => placeableContainer;
+
+    private int randomInt;
     
     private void Start()
     {
@@ -42,19 +44,28 @@ public class PlaceableGenerator : MonoBehaviour
     private void PlaceRandomPlaceable(Vector3 position)
     {
         //Pick a random placeable and Instantiate it inside the placeable container
-        
+        if (placeableObjects.Length == 0) return;
+
+        randomInt = Random.Range(0, placeableObjects.Length);
+        Instantiate(placeableObjects[randomInt], placeableContainer);
     }
 
     private void UpdatePlaceableDictionary()
     {
         //Iterate through the array of placeable objects and add them to the dictionary
-        
+        for (int i = 0; i < placeableObjects.Length; i++)
+        {
+            _placeableDictionary.Add(placeableObjects[i].Type, placeableObjects[i]);
+        }
     }
 
     public void GeneratePlaceable(string type, Vector3 position, Vector3 rotation = default)
     {
         //Get the placeable based on the type from the dictionary if available, and instantiate the correct placeable object with the correct position and rotation values
         //and place it inside the placeable container
-        
+        if (_placeableDictionary.ContainsKey(type))
+        {
+            Instantiate(_placeableDictionary[type], position, Quaternion.Euler(rotation), placeableContainer);
+        }
     }
 }
