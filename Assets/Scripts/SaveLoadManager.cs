@@ -13,18 +13,26 @@ public class SaveLoadManager : MonoBehaviour
     {
         // Create a save data object
         
-        
+        SaveData saveData = new SaveData();
         // Create an array of placeable objects
-        
+        Transform container = placeableGenerator.PlaceableContainer;
+        int numPlaceables = container.childCount;
+        Placeable[] placeables = new Placeable[numPlaceables];
 
         // Loop through the children of the placeable container
-        
-        
+        for (int i = 0; i < numPlaceables; i++)
+        {
+            Transform placeableTransform = container.GetChild(i);
+            PlaceableObject placeableObject = placeableTransform.GetComponent<PlaceableObject>();
+        }
+
         //set the array in the save data object
-        
+        saveData.placeables = placeables;
         
         // Save the save data object in playerprefs
-        
+        string jsonData = JsonUtility.ToJson(saveData);
+        PlayerPrefs.SetString(_saveName, jsonData);
+        PlayerPrefs.Save();
         
         _isLoaded = true;
         Debug.Log("Data Saved");
@@ -33,16 +41,12 @@ public class SaveLoadManager : MonoBehaviour
     private void Load()
     {
         // If data is not loaded, load the data
-        if(_isLoaded) return;
+       
         
         // Get the save data from playerprefs
-        
-        
+      
         // Loop through the placeables and generate them
-        
-        
-        _isLoaded = true;
-        Debug.Log("Data Loaded");
+    
     }
 
     private void Update()
