@@ -25,12 +25,7 @@ public class SaveLoadManager : MonoBehaviour
 
             if (placeableObject != null)
             {
-                placeables[i] = new Placeable
-                {
-                    type = placeableObject.Type,
-                    position = child.position,
-                    rotation = child.rotation.eulerAngles
-                };
+                placeables[i] = new Placeable (placeableObject.Type, child.position, child.rotation.eulerAngles);
             }
         }
 
