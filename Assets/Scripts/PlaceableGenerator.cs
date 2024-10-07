@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -42,12 +41,24 @@ public class PlaceableGenerator : MonoBehaviour
     private void PlaceRandomPlaceable(Vector3 position)
     {
         //Pick a random placeable and Instantiate it inside the placeable container
+        int randomIndex = Random.Range(0, placeableObjects.Length);
+        PlaceableObject selectedObject = placeableObjects[randomIndex];
+
+        Instantiate(selectedObject, position, Quaternion.identity, placeableContainer);
         
     }
 
     private void UpdatePlaceableDictionary()
     {
         //Iterate through the array of placeable objects and add them to the dictionary
+        _placeableDictionary.Clear();
+        foreach (var placeable in placeableObjects)
+        {
+            if (!_placeableDictionary.ContainsKey(placeable.Type))
+            {
+                _placeableDictionary.Add(placeable.Type, placeable);
+            }
+        }
         
     }
 
@@ -55,6 +66,11 @@ public class PlaceableGenerator : MonoBehaviour
     {
         //Get the placeable based on the type from the dictionary if available, and instantiate the correct placeable object with the correct position and rotation values
         //and place it inside the placeable container
-        
+        if (_placeableDictionary.TryGetValue(type, out var placeable))
+        {
+            Quaternion placeableRotation = Quaternion.Euler(rotation);
+
+            Instantiate(placeable, position, placeableRotation, placeableContainer);
+        }
     }
 }
