@@ -586,6 +586,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   placeableGenerator: {fileID: 601758824}
+  placeableContainer: {fileID: 1049450158}
 --- !u!114 &601758824
 MonoBehaviour:
   m_ObjectHideFlags: 0
