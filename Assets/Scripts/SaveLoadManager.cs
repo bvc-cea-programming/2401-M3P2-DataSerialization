@@ -1,6 +1,8 @@
+using JetBrains.Annotations;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -17,6 +19,8 @@ public class SaveLoadManager : MonoBehaviour
     private object placeableContainer;
     private bool placeablesArray;
     private object mySave;
+    private object placeCurrent;
+   
     private void Save()
     {
         // Create a save data object
@@ -26,10 +30,13 @@ public class SaveLoadManager : MonoBehaviour
         // Create an array of placeable objects
         for (int i = 0; i < transform.childCount; i++)
         {
-            placeableArrayManager[i] = new Placeable();
-            placeableArrayManager[i].position = transform.GetChild(i).gameObject.transform.position;
-            placeableArrayManager[i].rotation = new Vector3(transform.GetChild(i).gameObject.transform.rotation.x, transform.GetChild(i).gameObject.transform.rotation.y, transform.GetChild(i).gameObject.transform.rotation.z);
-            placeableArrayManager[i].type = transform.GetChild(i).gameObject.GetComponent<PlaceableObject>().Type;
+        
+            {
+                placeableArrayManager[i].position = transform.GetChild(i).gameObject.transform.position;
+                placeableArrayManager[i].rotation = new Vector3(transform.GetChild(i).gameObject.transform.rotation.x, transform.GetChild(i).gameObject.transform.rotation.y, transform.GetChild(i).gameObject.transform.rotation.z);
+                placeableArrayManager[i].type = transform.GetChild(i).gameObject.GetComponent<PlaceableObject>().Type;
+            }
+            
         }
 
         // Loop through the children of the placeable container
@@ -37,7 +44,7 @@ public class SaveLoadManager : MonoBehaviour
         for (int i = 0; i < placeableGenerator.PlaceableContainer.childCount; i++)
         {
             Transform child = placeableGenerator.PlaceableContainer.GetChild(i);
-            Placeable placeCurrent = new();
+            Public Placeable;
             {
                 type = child.GetComponent<PlaceableObject>().Type;
                 position = child.position;
