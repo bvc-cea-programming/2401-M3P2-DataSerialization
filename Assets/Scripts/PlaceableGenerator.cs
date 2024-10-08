@@ -42,19 +42,26 @@ public class PlaceableGenerator : MonoBehaviour
     private void PlaceRandomPlaceable(Vector3 position)
     {
         //Pick a random placeable and Instantiate it inside the placeable container
-        
+       int RandomList = Random.Range(0, placeableObjects.Length);
+        PlaceableObject selectedPlaceable = placeableObjects[RandomList];
+        Instantiate(selectedPlaceable, position,Quaternion.identity, placeableContainer);
     }
 
     private void UpdatePlaceableDictionary()
     {
         //Iterate through the array of placeable objects and add them to the dictionary
-        
+        _placeableDictionary.Clear();
+        foreach (var obj in placeableObjects)
+        {
+            _placeableDictionary.Add(obj.Type, obj);
+
+        }
     }
 
     public void GeneratePlaceable(string type, Vector3 position, Vector3 rotation = default)
     {
         //Get the placeable based on the type from the dictionary if available, and instantiate the correct placeable object with the correct position and rotation values
         //and place it inside the placeable container
-        
+        Instantiate(_placeableDictionary[type], position, Quaternion.Euler(rotation), placeableContainer);
     }
 }
