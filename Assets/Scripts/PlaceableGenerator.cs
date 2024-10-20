@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class PlaceableGenerator : MonoBehaviour
 {
     
@@ -33,6 +34,7 @@ public class PlaceableGenerator : MonoBehaviour
 
     private void PlaceRandomPlaceableOnClick()
     {
+        Debug.Log("PlaceRandomPlaceableOnClick");
         if (Physics.Raycast(_mainCamera.ScreenPointToRay(new Vector2(Screen.width / 2, Screen.height / 2)), out var hit,
                 Mathf.Infinity, placementLayerMask))
         {
@@ -43,16 +45,21 @@ public class PlaceableGenerator : MonoBehaviour
     private void PlaceRandomPlaceable(Vector3 position)
     {
         //Pick a random placeable and Instantiate it inside the placeable container
-        Instantiate(placeableObjects[Random.Range(0, placeableObjects.Length)],placeableContainer.transform,true);
+        PlaceableObject randomObject = placeableObjects[Random.Range(0, placeableObjects.Length)];
+        Instantiate(randomObject,position,Quaternion.identity, placeableContainer);
     }
 
     private void UpdatePlaceableDictionary()
     {
         //Iterate through the array of placeable objects and add them to the dictionary
         foreach(PlaceableObject placeableObject in placeableObjects)
-        {
-            _placeableDictionary.Add(placeableObject.Type, placeableObject);
-           // Debug.Log("you have"+ placeableObject.name);
+        {   
+            if(!_placeableDictionary.ContainsKey(placeableObject.Type))
+            {
+                _placeableDictionary.Add(placeableObject.Type, placeableObject);
+            }
+           
+            Debug.Log("you have"+ placeableObject.name);
         }
     }
 
@@ -60,7 +67,8 @@ public class PlaceableGenerator : MonoBehaviour
     {
         //Get the placeable based on the type from the dictionary if available, and instantiate the correct placeable object with the correct position and rotation values
         //and place it inside the placeable container
-        Instantiate(_placeableDictionary[type], transform.position, transform.rotation);
+
+        Instantiate(_placeableDictionary[type], position, Quaternion.Euler(rotation),placeableContainer);
         Debug.Log("generate");
     }
 }
