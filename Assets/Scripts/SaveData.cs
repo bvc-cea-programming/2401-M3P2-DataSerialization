@@ -3,5 +3,5 @@
 [Serializable]
 public class SaveData
 {
-    public Placeable[] placeableType;
+    public Placeable[] placeables;
 }

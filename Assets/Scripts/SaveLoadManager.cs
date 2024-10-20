@@ -13,24 +13,34 @@ public class SaveLoadManager : MonoBehaviour
     private void Save()
     {
         // Create a save data object
-        SaveData myObject = new SaveData();
+        SaveData myData = new SaveData();
 
         // Create an array of placeable objects
-        Placeable[] placeables;
-
+        Transform placeableContainer = placeableGenerator.PlaceableContainer;
+        int childCount = placeableContainer.childCount;
+        Placeable[] placeables = new Placeable[childCount];
+        
         // Loop through the children of the placeable container
-        //foreach (Placeable placeable in placeables)
-        //{
-
-        //}
-
-
+        for (int i = 0;i < childCount;i++)
+        {
+            Transform child = placeableContainer.GetChild(i);
+            PlaceableObject placeableObject = child.GetComponent<PlaceableObject>();
+            Placeable placeable = new Placeable
+            {
+                type = placeableObject.Type,
+                position =child.position,
+                rotation =child.eulerAngles,
+            };
+            placeables[i] = placeable;
+        }
+        
         //set the array in the save data object
-        string saveName = JsonUtility.ToJson(myObject);
+        myData.placeables = placeables;
 
         // Save the save data object in playerprefs
-        PlayerPrefs.SetString(saveName, _saveName);
-        
+        string myDataString = JsonUtility.ToJson(myData);
+        PlayerPrefs.SetString(_saveName, myDataString);
+        PlayerPrefs.Save();
         _isLoaded = true;
         Debug.Log("Data Saved");
     }
@@ -41,17 +51,25 @@ public class SaveLoadManager : MonoBehaviour
         if(_isLoaded) return;
 
         // Get the save data from playerprefs
-        PlayerPrefs.GetString(_saveName);
-
+        string myDataString = PlayerPrefs.GetString(_saveName, null);
+        if (string.IsNullOrEmpty(myDataString)) 
+        {
+            Debug.Log(" myDataString is empty");
+            return;
+        }
         // Loop through the placeables and generate them
-        JsonUtility.FromJson<Type>(_saveName);
-        placeableGenerator = new PlaceableGenerator();
-       // placeableGenerator.GeneratePlaceable(type, position, rotation);
-        //foreach (Placeable placeObject in placeables)
-        //{
-            
-        //}
+
+
+
+        SaveData loadedData = JsonUtility.FromJson<SaveData>(myDataString);
+
+        // placeableGenerator = new PlaceableGenerator();
         
+        foreach (Placeable placeable in loadedData.placeables)
+        {
+            placeableGenerator.GeneratePlaceable(placeable.type, placeable.position, placeable.rotation);
+        }
+
         _isLoaded = true;
         Debug.Log("Data Loaded");
     }
